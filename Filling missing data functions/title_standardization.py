@@ -1,4 +1,4 @@
-def titles_standardization(row, titles_common_list_age_distr_male, np, scipy):
+def title_standardization(row, titles_common_list_age_distr_male, np, scipy):
     if row['Name_title'] not in ['Master', 'Miss', 'Mr', 'Mrs']:
         if row['Sex'] == 'female':
             row.set_value('Name_title', 'Miss')
