@@ -10,30 +10,27 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.dummy import DummyRegressor
 from sklearn.tree import DecisionTreeRegressor
 
+from missing-data_Split_name import split_name
 
 
-# Start TRAIN pre-processing
+
+
+## Loading TRAIN data
 print('0%   Start TRAIN pre-processing')
 train_original = pd.read_csv('titanic_train.csv')
 # Setting passenger's Id
 train_original.set_index('PassengerId',inplace=True)
 train = train_original.copy()
 
-## Name feature processing
-def split_name(row):
-    name_list1 = row['Name'].split(', ')
-    row['Name_last'] = name_list1[0]
 
-    name_list2 = name_list1[1].split('. ')
-    row['Name_title'] = name_list2[0]
-    row['Name_other'] = name_list2[1]
-    return row
+
+## Name feature processing
+
+# Splitting name by title, last name and first (other) name
+
 train = train.apply(split_name, axis=1)
 
-#print(train['Name_title'].unique())
-#train.to_csv('titanic_train__names_titles.csv', sep=',', encoding='utf-8')
-
-# Titles descriptive statistics
+# Titles descriptive statistics based on passenger age
 train_df_descripion_by_title = train.copy().groupby(['Name_title', 'Sex']).agg(['max', 'min','mean', 'median', 'count',np.std])
 train_df_descripion_by_title = train_df_descripion_by_title[[('Age','min'),
                                                              ('Age','max'),
@@ -105,7 +102,7 @@ reg_lm_lasso = Lasso()
 reg_dum_mean = DummyRegressor(strategy='mean')
 reg_dum_median = DummyRegressor(strategy='median')
 
-def age_prediction_by_one_tytle(X,y,scoring_method='neg_mean_absolute_error'):
+def age_prediction_by_one_title(X,y,scoring_method='neg_mean_absolute_error'):
     cv_scores_reg_dt_d2 = cross_val_score(reg_dt_d2, X, y, cv=5, scoring=scoring_method)
     print('Cross-validation scores of DecisionTreeRegressor(max_depth=2): ', cv_scores_reg_dt_d2)
     print('Mean cross-validation score of DecisionTreeRegressor(max_depth=2): ', np.mean(cv_scores_reg_dt_d2))
@@ -165,11 +162,11 @@ def age_prediction_by_one_tytle(X,y,scoring_method='neg_mean_absolute_error'):
 #y_age_Master = y_age.copy()[X_age['Name_title']=='Master']
 #print('')
 #print(len(X_age_Master))
-#age_prediction_by_one_tytle(X_age_Master, y_age_Master)
+#age_prediction_by_one_title(X_age_Master, y_age_Master)
 #print('')
-#age_prediction_by_one_tytle(X_age_Master, y_age_Master, 'neg_mean_squared_log_error')
+#age_prediction_by_one_title(X_age_Master, y_age_Master, 'neg_mean_squared_log_error')
 #print('')
-#age_prediction_by_one_tytle(preprocessing.scale(X_age_Master),preprocessing.scale(y_age_Master))
+#age_prediction_by_one_title(preprocessing.scale(X_age_Master),preprocessing.scale(y_age_Master))
 #print('')
 #print('')
 # Conclusion(model fitting): use MEDIAN age for Masters age prediction. However, MEAN would work fine as well
@@ -192,11 +189,11 @@ def age_prediction_by_one_tytle(X,y,scoring_method='neg_mean_absolute_error'):
 #X_age_Mr = X_age.copy()[X_age['Name_title'] == 'Mr'].loc[:, ['SibSp', 'Parch']]
 #y_age_Mr = y_age.copy()[X_age['Name_title'] == 'Mr']
 #print(len(X_age_Mr))
-#age_prediction_by_one_tytle(X_age_Mr, y_age_Mr)
+#age_prediction_by_one_title(X_age_Mr, y_age_Mr)
 #print('')
-#age_prediction_by_one_tytle(X_age_Mr, y_age_Mr, 'neg_mean_squared_log_error')
+#age_prediction_by_one_title(X_age_Mr, y_age_Mr, 'neg_mean_squared_log_error')
 #print('')
-#age_prediction_by_one_tytle(preprocessing.scale(X_age_Mr), preprocessing.scale(y_age_Mr))
+#age_prediction_by_one_title(preprocessing.scale(X_age_Mr), preprocessing.scale(y_age_Mr))
 #print('')
 #print('')
 ## Conclusion(model fitting): use MEDIAN age for Mr_s age prediction. However, MEAN would work fine as well
@@ -222,11 +219,11 @@ def age_prediction_by_one_tytle(X,y,scoring_method='neg_mean_absolute_error'):
 #X_age_Mrs = X_age.copy()[X_age['Name_title'] == 'Mrs'].loc[:, ['SibSp', 'Parch']]
 #y_age_Mrs = y_age.copy()[X_age['Name_title'] == 'Mrs']
 #print(len(X_age_Mrs))
-#age_prediction_by_one_tytle(X_age_Mrs, y_age_Mrs)
+#age_prediction_by_one_title(X_age_Mrs, y_age_Mrs)
 #print('')
-#age_prediction_by_one_tytle(X_age_Mrs, y_age_Mrs, 'neg_mean_squared_log_error')
+#age_prediction_by_one_title(X_age_Mrs, y_age_Mrs, 'neg_mean_squared_log_error')
 #print('')
-#age_prediction_by_one_tytle(preprocessing.scale(X_age_Mrs), preprocessing.scale(y_age_Mrs))
+#age_prediction_by_one_title(preprocessing.scale(X_age_Mrs), preprocessing.scale(y_age_Mrs))
 #print('')
 #print('')
 ## Conclusion(model fitting): use MEAN age for Mrs_s age prediction. However, MEAN would work fine as well
@@ -251,13 +248,13 @@ def age_prediction_by_one_tytle(X,y,scoring_method='neg_mean_absolute_error'):
 #X_age_Miss = X_age.copy()[X_age['Name_title'] == 'Miss'].loc[:, ['SibSp', 'Parch']]
 #y_age_Miss = y_age.copy()[X_age['Name_title'] == 'Miss']
 #print(len(X_age_Miss))
-#age_prediction_by_one_tytle(X_age_Miss, y_age_Miss)
+#age_prediction_by_one_title(X_age_Miss, y_age_Miss)
 #print('')
-#age_prediction_by_one_tytle(X_age_Miss, y_age_Miss, 'neg_mean_squared_log_error')
+#age_prediction_by_one_title(X_age_Miss, y_age_Miss, 'neg_mean_squared_log_error')
 #print('')
-#age_prediction_by_one_tytle(X_age_Miss, y_age_Miss)
+#age_prediction_by_one_title(X_age_Miss, y_age_Miss)
 #print('')
-#age_prediction_by_one_tytle(preprocessing.scale(X_age_Miss), preprocessing.scale(y_age_Miss))
+#age_prediction_by_one_title(preprocessing.scale(X_age_Miss), preprocessing.scale(y_age_Miss))
 #print('')
 #print('')
 ## Conclusion(model fitting): use MEAN age for Misses age prediction
@@ -283,11 +280,11 @@ def age_prediction_by_one_tytle(X,y,scoring_method='neg_mean_absolute_error'):
 #X_age_transformed = pd.merge(X_age_transformed, X_age[['SibSp','Parch']],
 #                             left_index=True, right_index=True)
 #
-#age_prediction_by_one_tytle(X_age_transformed, y_age, 'neg_mean_squared_log_error')
+#age_prediction_by_one_title(X_age_transformed, y_age, 'neg_mean_squared_log_error')
 #print('')
-#age_prediction_by_one_tytle(X_age_transformed, y_age)
+#age_prediction_by_one_title(X_age_transformed, y_age)
 #print('')
-#age_prediction_by_one_tytle(preprocessing.scale(X_age_transformed), preprocessing.scale(y_age))
+#age_prediction_by_one_title(preprocessing.scale(X_age_transformed), preprocessing.scale(y_age))
 
 ## Conclusion: the best effective mehod so far is to assign MEAN of a corresponding class to
 # instances with unknown age
@@ -355,7 +352,7 @@ print('14%  Age of the passengers with unknown age is identified')
 ## Estimating passenger locations on the ship
 
 # loading location map of titanic cabins
-cabin_loc = pd.read_csv('titanic_rooms_location.csv')
+cabin_loc = pd.read_csv('titanic_cabin_location.csv')
 cabin_loc.set_index('Room code', inplace=True)
 
 # creating cabin availability list for passenger accounting by cabin and
