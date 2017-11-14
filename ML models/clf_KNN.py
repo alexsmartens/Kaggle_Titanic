@@ -1,6 +1,7 @@
 def clf_KNN(KNeighborsClassifier,
             train_X,
             train_Y,
+            prep_func,
             np,
             pd,
             cv,
@@ -12,7 +13,7 @@ def clf_KNN(KNeighborsClassifier,
     def KNN_neighbor(train_X, train_Y, n_neighbors, algorithm):
         scores = pd.DataFrame(columns={'Avg_train_score', 'Avg_test_score'})
         for i in n_neighbors:
-            cv_res = cv(train_X, train_Y, KNeighborsClassifier(n_neighbors=i, algorithm=algorithm))
+            cv_res = cv(train_X, train_Y, KNeighborsClassifier(n_neighbors=i, algorithm=algorithm), prep_func)
             scores.loc[i] = [cv_res['Avg_train_score'], cv_res['Avg_test_score']]
         return scores
 
@@ -21,7 +22,7 @@ def clf_KNN(KNeighborsClassifier,
         print(scores)
         plot_scores(scores)
 
-    cv_res = cv(train_X, train_Y, KNeighborsClassifier())
+    cv_res = cv(train_X, train_Y, KNeighborsClassifier(n_neighbors=7), prep_func)
     print('KNN classifier expected accuracy: {0:.2f}'.format(cv_res['Avg_test_score']))
     print('')
 

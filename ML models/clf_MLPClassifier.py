@@ -1,6 +1,7 @@
 def clf_MLPClassifier(MLPClassifier,
                       train_X,
                       train_Y,
+                      prep_func,
                       np,
                       pd,
                       cv,
@@ -17,7 +18,7 @@ def clf_MLPClassifier(MLPClassifier,
             cv_res = cv(train_X, train_Y, MLPClassifier(activation=activation,
                                                         hidden_layer_sizes=hidden_layer_sizes,
                                                         alpha=i,
-                                                        solver=solver))
+                                                        solver=solver),prep_func)
             scores.loc[i] = [cv_res['Avg_train_score'], cv_res['Avg_test_score']]
         return scores
 
@@ -37,7 +38,7 @@ def clf_MLPClassifier(MLPClassifier,
                 cv_res = cv(train_X, train_Y, MLPClassifier(activation=activation,
                                                             hidden_layer_sizes=[i, ii],
                                                             alpha=alpha,
-                                                            solver=solver))
+                                                            solver=solver),prep_func)
                 num += 1
                 scores.loc[num] = pd.Series([i, ii, cv_res['Avg_train_score'], cv_res['Avg_test_score']],
                                             index=['layers_num', 'layers_size', 'Avg_train_score', 'Avg_test_score'])
@@ -51,21 +52,21 @@ def clf_MLPClassifier(MLPClassifier,
     # print(cv(train_X, train_Y, MLPClassifier(activation='relu',
     #                                         hidden_layer_sizes=hidden_layer_sizes,
     #                                         alpha=alpha,
-    #                                         solver=solver)))
+    #                                         solver=solver)),prep_func)
     #
     # print(cv(train_X, train_Y, MLPClassifier(activation='logistic',
     #                                         hidden_layer_sizes=hidden_layer_sizes,
     #                                         alpha=alpha,
-    #                                         solver=solver)))
+    #                                         solver=solver)),prep_func)
     #
     # print(cv(train_X, train_Y, MLPClassifier(activation='tanh',
     #                                         hidden_layer_sizes=hidden_layer_sizes,
     #                                         alpha=alpha,
-    #                                         solver=solver)))
+    #                                         solver=solver)),prep_func)
 
     cv_res = cv(train_X, train_Y, MLPClassifier(activation=activation,
                                              hidden_layer_sizes=hidden_layer_sizes,
                                              alpha=alpha,
-                                             solver=solver))
+                                             solver=solver),prep_func)
     print('Neural nets classifier expected accuracy: {0:.2f}'.format(cv_res['Avg_test_score']))
     print('')
