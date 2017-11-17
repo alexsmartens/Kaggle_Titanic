@@ -4,7 +4,7 @@ This is an approach to building ML models for "Titanic: Machine Learning from Di
 
 My current current results
 * accuracy: 0.80861 
-* No: 682
+* No: 682 (Top 8%)
 
 
 The project consists from two major parts so far.
