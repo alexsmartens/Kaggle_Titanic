@@ -3,7 +3,7 @@
 This is an approach to building ML models for "Titanic: Machine Learning from Disaster" Kaggle competition
 
 My current current results
-* accuracy: 0.80861 
+* Accuracy: 0.80861 
 * Top 7%
 
 
