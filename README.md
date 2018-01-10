@@ -7,7 +7,7 @@ My current current results
 * Top 7%
 
 
-The project consists from two major parts so far.
+The project consists from two major parts.
 
 1. Filling missing data. This part is implemented in main_1_filling_missing_data.py. The functions used by main_1_filling_missing_data.py are contained in Filling missing data functions folder. Filling missing data is mainly filling two features:
 - Age. My approach to filling age: I figured out that Name feature contain title information. General titles are: Master, Miss, Mr, Mrs. Hence, titles is an indicator of age. I computed distributions of each title through the train set and assigned mean title age to passengers with unknown age.
