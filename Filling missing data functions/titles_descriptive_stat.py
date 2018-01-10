@@ -1,5 +1,7 @@
-def titles_descriptive_stat(train, np, print_satat=False):
-    train_df_descripion_by_title = train.copy().groupby(['Name_title', 'Sex']).agg(['max', 'min','mean', 'median', 'count',np.std])
+def titles_descriptive_stat(df_X, print_satat=False):
+    import numpy as np
+
+    train_df_descripion_by_title = df_X.copy().groupby(['Name_title', 'Sex']).agg(['max', 'min','mean', 'median', 'count',np.std])
     train_df_descripion_by_title = train_df_descripion_by_title[[('Age','min'),
                                                                  ('Age','max'),
                                                                  ('Age','median'),
@@ -17,4 +19,4 @@ def titles_descriptive_stat(train, np, print_satat=False):
     titles_common_list_age_distr.reset_index(inplace=True)
     titles_common_list_age_distr.set_index('Name_title',inplace=True)
     titles_common_list_age_distr_male = titles_common_list_age_distr.copy()[titles_common_list_age_distr['Sex']=='male']
-    return [train_df_descripion_by_title, titles_common_list_age_distr, titles_common_list_age_distr_male]
+    return (train_df_descripion_by_title, titles_common_list_age_distr, titles_common_list_age_distr_male)
